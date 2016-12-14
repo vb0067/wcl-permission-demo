@@ -2,6 +2,10 @@ package me.chunyu.spike.wcl_permission_demo;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.PermissionGroupInfo;
+import android.content.pm.PermissionInfo;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -14,15 +18,7 @@ public class MainActivity extends AppCompatActivity {
 
     private static final int REQUEST_CODE = 0; // 请求码
 
-    // 所需的全部权限
-    static final String[] PERMISSIONS = new String[]{
-            Manifest.permission.RECORD_AUDIO,
-            Manifest.permission.MODIFY_AUDIO_SETTINGS
-    };
-
     @Bind(R.id.main_t_toolbar) Toolbar mTToolbar;
-
-    private PermissionsChecker mPermissionsChecker; // 权限检测器
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,20 +28,19 @@ public class MainActivity extends AppCompatActivity {
 
         setSupportActionBar(mTToolbar);
 
-        mPermissionsChecker = new PermissionsChecker(this);
     }
 
     @Override protected void onResume() {
         super.onResume();
 
         // 缺少权限时, 进入权限配置页面
-        if (mPermissionsChecker.lacksPermissions(PERMISSIONS)) {
+        if (PermissionsChecker.lacksPermissions(this)) {
             startPermissionsActivity();
         }
     }
 
     private void startPermissionsActivity() {
-        PermissionsActivity.startActivityForResult(this, REQUEST_CODE, PERMISSIONS);
+        PermissionsActivity.startActivityForResult(this, REQUEST_CODE);
     }
 
     @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -55,4 +50,6 @@ public class MainActivity extends AppCompatActivity {
             finish();
         }
     }
+
+
 }

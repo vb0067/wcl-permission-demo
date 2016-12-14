@@ -24,11 +24,10 @@ public class PermissionsActivity extends AppCompatActivity {
     public static final int PERMISSIONS_DENIED = 1; // 权限拒绝
 
     private static final int PERMISSION_REQUEST_CODE = 0; // 系统权限管理页面的参数
-    private static final String EXTRA_PERMISSIONS =
-            "me.chunyu.clwang.permission.extra_permission"; // 权限参数
+    private static final String EXTRA_PERMISSIONS ="com.deppon.extra_permission"; // 权限参数
+
     private static final String PACKAGE_URL_SCHEME = "package:"; // 方案
 
-    private PermissionsChecker mChecker; // 权限检测器
     private boolean isRequireCheck; // 是否需要系统权限检测, 防止和系统提示框重叠
 
     // 启动当前权限页面的公开接口
@@ -45,7 +44,6 @@ public class PermissionsActivity extends AppCompatActivity {
         }
         setContentView(R.layout.activity_permissions);
 
-        mChecker = new PermissionsChecker(this);
         isRequireCheck = true;
     }
 
@@ -53,7 +51,7 @@ public class PermissionsActivity extends AppCompatActivity {
         super.onResume();
         if (isRequireCheck) {
             String[] permissions = getPermissions();
-            if (mChecker.lacksPermissions(permissions)) {
+            if (PermissionsChecker.lacksPermissions(this,permissions)) {
                 requestPermissions(permissions); // 请求权限
             } else {
                 allPermissionsGranted(); // 全部权限都已获取
